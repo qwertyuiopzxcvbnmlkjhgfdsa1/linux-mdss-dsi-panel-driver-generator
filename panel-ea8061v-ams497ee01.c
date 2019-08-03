@@ -14,7 +14,7 @@ struct ea8061v_ams497ee01 {
 	struct drm_panel panel;
 	struct mipi_dsi_device *dsi;
 	struct backlight_device *backlight;
-	struct regulator *supply;
+	struct regulator_bulk_data supplies[2];
 	struct gpio_desc *reset_gpio;
 
 	bool prepared;
@@ -118,9 +118,9 @@ static int ea8061v_ams497ee01_prepare(struct drm_panel *panel)
 	if (ctx->prepared)
 		return 0;
 
-	ret = regulator_enable(ctx->supply);
+	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
 	if (ret < 0) {
-		dev_err(dev, "Failed to enable regulator: %d\n", ret);
+		dev_err(dev, "Failed to enable regulators: %d\n", ret);
 		return ret;
 	}
 
@@ -130,7 +130,7 @@ static int ea8061v_ams497ee01_prepare(struct drm_panel *panel)
 	if (ret < 0) {
 		dev_err(dev, "Failed to initialize panel: %d\n", ret);
 		gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-		regulator_disable(ctx->supply);
+		regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
 		return ret;
 	}
 
@@ -152,7 +152,7 @@ static int ea8061v_ams497ee01_unprepare(struct drm_panel *panel)
 		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
 
 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-	regulator_disable(ctx->supply);
+	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
 
 	ctx->prepared = false;
 	return 0;
@@ -298,10 +298,12 @@ static int ea8061v_ams497ee01_probe(struct mipi_dsi_device *dsi)
 	if (!ctx)
 		return -ENOMEM;
 
-	ctx->supply = devm_regulator_get(dev, "power");
-	if (IS_ERR(ctx->supply)) {
-		ret = PTR_ERR(ctx->supply);
-		dev_err(dev, "Failed to get power-supply: %d\n", ret);
+	ctx->supplies[0].supply = "vdd3";
+	ctx->supplies[1].supply = "vci";
+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies),
+				      ctx->supplies);
+	if (ret < 0) {
+		dev_err(dev, "Failed to get regulators: %d\n", ret);
 		return ret;
 	}
 
