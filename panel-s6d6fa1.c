@@ -144,11 +144,17 @@ static int s6d6fa1_on(struct s6d6fa1 *ctx)
 	dsi_generic_write_seq(dsi, 0xf0, 0xa5, 0xa5);
 	dsi_generic_write_seq(dsi, 0xf1, 0xa5, 0xa5);
 	dsi_generic_write_seq(dsi, 0xfc, 0xa5, 0xa5);
-	dsi_dcs_write_seq(dsi, 0x51, 0xff);
+
+	ret = mipi_dsi_dcs_set_display_brightness(dsi, 0x00ff);
+	if (ret < 0) {
+		dev_err(dev, "Failed to set display brightness: %d\n", ret);
+		return ret;
+	}
 	msleep(1);
-	dsi_dcs_write_seq(dsi, 0x53, 0x2c);
+
+	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x2c);
 	msleep(1);
-	dsi_dcs_write_seq(dsi, 0x55, 0x00);
+	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
 	msleep(1);
 
 	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);

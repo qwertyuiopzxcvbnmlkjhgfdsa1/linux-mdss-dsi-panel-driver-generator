@@ -69,7 +69,7 @@ static int otm1902b_on(struct otm1902b *ctx)
 	msleep(1);
 	dsi_generic_write_seq(dsi, 0xca, 0xff, 0x02, 0x5f, 0x40);
 	msleep(1);
-	dsi_dcs_write_seq(dsi, 0x53, 0x2c);
+	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x2c);
 	msleep(1);
 
 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
