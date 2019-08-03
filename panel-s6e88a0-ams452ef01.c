@@ -296,10 +296,10 @@ static int s6e88a0_ams452ef01_probe(struct mipi_dsi_device *dsi)
 	if (!ctx)
 		return -ENOMEM;
 
-	ctx->supply = devm_regulator_get(dev, "['power']");
+	ctx->supply = devm_regulator_get(dev, "power");
 	if (IS_ERR(ctx->supply)) {
 		ret = PTR_ERR(ctx->supply);
-		dev_err(dev, "Failed to get ['power']-supply: %d\n", ret);
+		dev_err(dev, "Failed to get power regulator: %d\n", ret);
 		return ret;
 	}
 
