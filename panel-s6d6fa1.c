@@ -8,6 +8,7 @@
 #include <linux/delay.h>
 #include <linux/gpio/consumer.h>
 #include <linux/module.h>
+#include <video/mipi_display.h>
 
 struct s6d6fa1 {
 	struct drm_panel panel;

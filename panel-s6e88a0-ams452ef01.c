@@ -9,6 +9,7 @@
 #include <linux/gpio/consumer.h>
 #include <linux/module.h>
 #include <linux/regulator/consumer.h>
+#include <video/mipi_display.h>
 
 struct s6e88a0_ams452ef01 {
 	struct drm_panel panel;
