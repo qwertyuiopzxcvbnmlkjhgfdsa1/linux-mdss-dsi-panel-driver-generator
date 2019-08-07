@@ -44,11 +44,11 @@ static inline struct s6d6fa1 *to_s6d6fa1(struct drm_panel *panel)
 static void s6d6fa1_reset(struct s6d6fa1 *ctx)
 {
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-	msleep(10);
+	usleep_range(10000, 11000);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-	msleep(10);
+	usleep_range(10000, 11000);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-	msleep(10);
+	usleep_range(10000, 11000);
 }
 
 static int s6d6fa1_on(struct s6d6fa1 *ctx)
@@ -151,19 +151,19 @@ static int s6d6fa1_on(struct s6d6fa1 *ctx)
 		dev_err(dev, "Failed to set display brightness: %d\n", ret);
 		return ret;
 	}
-	msleep(1);
+	usleep_range(1000, 2000);
 
 	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x2c);
-	msleep(1);
+	usleep_range(1000, 2000);
 	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_POWER_SAVE, 0x00);
-	msleep(1);
+	usleep_range(1000, 2000);
 
 	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
 	if (ret < 0) {
 		dev_err(dev, "Failed to set tear on: %d\n", ret);
 		return ret;
 	}
-	msleep(1);
+	usleep_range(1000, 2000);
 
 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
 	if (ret < 0) {

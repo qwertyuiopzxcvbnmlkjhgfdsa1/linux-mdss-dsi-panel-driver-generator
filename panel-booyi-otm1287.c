@@ -39,7 +39,7 @@ static void booyi_otm1287_reset(struct booyi_otm1287 *ctx)
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
 	msleep(20);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-	msleep(10);
+	usleep_range(10000, 11000);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
 	msleep(20);
 }

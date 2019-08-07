@@ -38,11 +38,11 @@ static inline struct s6e88a0_ams452ef01 *to_s6e88a0_ams452ef01(struct drm_panel 
 static void s6e88a0_ams452ef01_reset(struct s6e88a0_ams452ef01 *ctx)
 {
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-	msleep(5);
+	usleep_range(5000, 6000);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-	msleep(1);
+	usleep_range(1000, 2000);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-	msleep(10);
+	usleep_range(10000, 11000);
 }
 
 static int s6e88a0_ams452ef01_on(struct s6e88a0_ams452ef01 *ctx)

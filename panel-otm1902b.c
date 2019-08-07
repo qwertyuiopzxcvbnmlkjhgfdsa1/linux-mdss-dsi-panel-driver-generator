@@ -46,9 +46,9 @@ static void otm1902b_reset(struct otm1902b *ctx)
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
 	msleep(20);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-	msleep(2);
+	usleep_range(2000, 3000);
 	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-	msleep(10);
+	usleep_range(10000, 11000);
 }
 
 static int otm1902b_on(struct otm1902b *ctx)
@@ -61,17 +61,17 @@ static int otm1902b_on(struct otm1902b *ctx)
 
 	dsi_generic_write_seq(dsi, 0x00, 0x00);
 	dsi_generic_write_seq(dsi, 0xff, 0x19, 0x02, 0x01, 0x00);
-	msleep(1);
+	usleep_range(1000, 2000);
 	dsi_generic_write_seq(dsi, 0x00, 0x80);
-	msleep(1);
+	usleep_range(1000, 2000);
 	dsi_generic_write_seq(dsi, 0xff, 0x19, 0x02);
-	msleep(1);
+	usleep_range(1000, 2000);
 	dsi_dcs_write_seq(dsi, 0x00, 0xb0);
-	msleep(1);
+	usleep_range(1000, 2000);
 	dsi_generic_write_seq(dsi, 0xca, 0xff, 0x02, 0x5f, 0x40);
-	msleep(1);
+	usleep_range(1000, 2000);
 	dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x2c);
-	msleep(1);
+	usleep_range(1000, 2000);
 
 	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
 	if (ret < 0) {
