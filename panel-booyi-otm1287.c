@@ -8,6 +8,7 @@
 #include <linux/delay.h>
 #include <linux/gpio/consumer.h>
 #include <linux/module.h>
+#include <linux/of.h>
 #include <linux/regulator/consumer.h>
 
 struct booyi_otm1287 {
@@ -401,10 +402,10 @@ static int booyi_otm1287_probe(struct mipi_dsi_device *dsi)
 	if (!ctx)
 		return -ENOMEM;
 
-	ctx->supply = devm_regulator_get(dev, "vdd");
+	ctx->supply = devm_regulator_get(dev, "power");
 	if (IS_ERR(ctx->supply)) {
 		ret = PTR_ERR(ctx->supply);
-		dev_err(dev, "Failed to get vdd regulator: %d\n", ret);
+		dev_err(dev, "Failed to get power regulator: %d\n", ret);
 		return ret;
 	}
 
